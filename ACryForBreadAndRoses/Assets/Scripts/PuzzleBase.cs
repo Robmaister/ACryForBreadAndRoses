@@ -26,7 +26,7 @@ public class PuzzleBase : MonoBehaviour
 
 		done = false;
 		currentPuzzle = Instantiate(Resources.Load<GameObject>(prefab));
-		currentPuzzle.transform.parent = this.transform;
+		currentPuzzle.transform.SetParent(this.transform);
 		RectTransform trans = currentPuzzle.GetComponent<RectTransform>();
 		trans.offsetMax = Vector2.zero;
 		trans.offsetMin = Vector2.zero;

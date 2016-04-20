@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class EndSceneAction : CutsceneAction
 {
+	public string NextScene;
 
-	// Use this for initialization
-	void Start () {
-	
+	private UIManager uiMgr;
+
+	protected override void ActionStart()
+	{
+		uiMgr = GameObject.Find("UICanvas").GetComponent<UIManager>();
+
+		uiMgr.FadeOut();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	protected override void ActionUpdate()
+	{
+		if (uiMgr.IsDoneFading)
+		{
+			done = true;
+
+			SceneManager.LoadScene(NextScene);
+		}
 	}
 }

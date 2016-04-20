@@ -15,8 +15,15 @@ public class Cutscene : MonoBehaviour {
 	void OnEnable()
 	{
 		actions = new List<CutsceneAction>();
-		foreach (CutsceneAction action in GetComponentsInChildren<CutsceneAction>())
-			actions.Add(action);
+
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			Transform t = transform.GetChild(i);
+
+			CutsceneAction act = t.GetComponent<CutsceneAction>();
+			if (act != null)
+				actions.Add(act);
+		}
 
 		if (actions.Count == 0)
 			return;
@@ -29,23 +36,27 @@ public class Cutscene : MonoBehaviour {
 
 		foreach (var action in actions)
 		{
-			action.enabled = false;
 			action.parentCutscene = this;
+			action.gameObject.SetActive(false);
 		}
 
-		actions[0].enabled = true;
+		actions[0].gameObject.SetActive(true);
+		actions[0].OnActionInit();
 	}
 
 	public void CompleteAction()
 	{
-		actions[currentAction].enabled = false;
+		actions[currentAction].gameObject.SetActive(false);
 		currentAction++;
 
 		if (currentAction < actions.Count)
-			actions[currentAction].enabled = true;
+		{
+			actions[currentAction].gameObject.SetActive(true);
+			actions[currentAction].OnActionInit();
+		}
 		else
 		{
-			enabled = false;
+			gameObject.SetActive(false);
 
 			if (playerControl != null)
 				playerControl.enabled = true;

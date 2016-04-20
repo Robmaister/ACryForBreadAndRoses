@@ -7,6 +7,9 @@ public class CutsceneAction : MonoBehaviour {
 	public Cutscene parentCutscene;
 
 	protected bool done;
+	private bool started = false;
+
+	public bool IsDone { get { return done; } }
 
 	protected virtual void ActionStart()
 	{
@@ -16,25 +19,28 @@ public class CutsceneAction : MonoBehaviour {
 	{
 	}
 
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-
-	void OnEnable()
+	public void OnActionInit()
 	{
 		done = false;
 		ActionStart();
+
+		started = true;
 	}
 
 	void Update ()
 	{
+		if (!started)
+			return;
+
 		ActionUpdate();
 
 		if (done)
 		{
-			parentCutscene.CompleteAction();
+			if (parentCutscene)
+				parentCutscene.CompleteAction();
+			else
+				gameObject.SetActive(false);
+
 			return;
 		}
 	}
