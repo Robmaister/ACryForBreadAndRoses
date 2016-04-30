@@ -26,6 +26,8 @@ public class MainMenuScript : MonoBehaviour {
     {
         startFading = true;
 
+		GameObject.Find("MusicManager").GetComponent<BackgroundMusic>().StartPlaying();
+
         if (fadeImage == null)
         {
             GameObject obj = new GameObject("fadeImage");
@@ -47,4 +49,9 @@ public class MainMenuScript : MonoBehaviour {
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
+
+	public void VoiceTestButton()
+	{
+		SceneManager.LoadScene("Scenes/TEST/VoiceControlTest");
+	}
 }

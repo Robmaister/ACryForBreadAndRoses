@@ -10,6 +10,8 @@ namespace UnityStandardAssets._2D
         public float lookAheadFactor = 3;
         public float lookAheadReturnSpeed = 0.5f;
         public float lookAheadMoveThreshold = 0.1f;
+		public Vector2 BoundsMin = new Vector2(0, 0);
+		public Vector2 BoundsMax = new Vector2(10, 10);
 
         private float m_OffsetZ;
         private Vector3 m_LastTargetPosition;
@@ -28,8 +30,12 @@ namespace UnityStandardAssets._2D
         // Update is called once per frame
         private void Update()
         {
-            // only update lookahead pos if accelerating or changed direction
-            float xMoveDelta = (target.position - m_LastTargetPosition).x;
+			Vector3 targetPosition = target.position;
+			targetPosition.x = Mathf.Clamp(targetPosition.x, BoundsMin.x, BoundsMax.x);
+			targetPosition.y = Mathf.Clamp(targetPosition.y, BoundsMin.y, BoundsMax.y);
+
+			// only update lookahead pos if accelerating or changed direction
+			float xMoveDelta = (targetPosition - m_LastTargetPosition).x;
 
             bool updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
 
@@ -42,12 +48,12 @@ namespace UnityStandardAssets._2D
                 m_LookAheadPos = Vector3.MoveTowards(m_LookAheadPos, Vector3.zero, Time.deltaTime*lookAheadReturnSpeed);
             }
 
-            Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward*m_OffsetZ;
+            Vector3 aheadTargetPos = targetPosition + m_LookAheadPos + Vector3.forward*m_OffsetZ;
             Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
 
             transform.position = newPos;
 
-            m_LastTargetPosition = target.position;
+            m_LastTargetPosition = targetPosition;
         }
     }
 }
